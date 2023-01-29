@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    facturas_xml (0.1.0)
+    facturas_xml (0.1.1)
       nokogiri (~> 1.14)
 
 GEM

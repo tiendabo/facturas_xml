@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'facturas_xml'
-  spec.version = "0.1.0"
+  spec.version = "0.1.1"
   spec.summary = "Permite crear facturas en formato XML"
   spec.description = "Permite crear facturas en formato XML válidas para su envión al Servicio de Impuestos Nacionales de Bolivia"
   spec.authors = ["Jorge Arteaga Carvalho"]
