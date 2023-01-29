@@ -1,11 +1,11 @@
 Gem::Specification.new do |spec|
   spec.name = 'facturas_xml'
   spec.version = "0.1.0"
-  spec.summary = "Gem que produce facturas en formato XML"
-  spec.description = "Gem que produce facturas en formato XML"
+  spec.summary = "Permite crear facturas en formato XML"
+  spec.description = "Permite crear facturas en formato XML válidas para su envión al Servicio de Imputestos Nacionales de Bolivia"
   spec.authors = ["Jorge Arteaga Carvalho"]
   spec.email = "me@jorgelabs.com"
-  spec.files = ["lib/facturas_xml.rb"]
+  spec.files = ["lib/facturas_xml/facturas_xml.rb", "lib/facturas_xml/invoice_data.rb"]
   spec.homepage = "https://rubygems.org/gems/facturas_xml"
   spec.license = "MIT"
 
