@@ -57,5 +57,37 @@ class InvoiceData
 
   def initialize(data = {})
     @data = data
+
+    validate_data
+  end
+
+  private
+  def validate_data
+    validate_cabecera
+    validate_detalles
+  end
+
+  def validate_detalles
+    unless @data[:detalles]
+      raise "invoice_data debe conteter el attributo detalles"
+    end
+  end
+
+  def validate_cabecera
+    unless @data[:cabecera]
+      raise "invoice_data debe conteter el attributo cabecera"
+    end
+
+    missing_fields = []
+
+    InvoiceData.allowed_cabecera_fields.each do |field|
+      if @data[:cabecera][field.to_sym].nil? && ALLOWED_CABECERA_FIELDS[field.to_sym][:mandatory]
+        missing_fields << field
+      end
+    end
+
+    if missing_fields.any?
+      raise "La cabecera no tiene los campos: #{missing_fields.join(', ')}"
+    end
   end
 end

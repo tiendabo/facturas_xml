@@ -2,60 +2,67 @@ require 'spec_helper'
 
 describe FacturasXML do
   describe '.compra_venta' do
+    let(:cabecera) do
+      {
+        nitEmisor: 1905208,
+        razonSocialEmisor: 'Jorge Arteaga',
+        municipio: 'Santa Cruz',
+        telefono: 70055555,
+        numeroFactura:1234567,
+        cuf: '44AAEC00DBD34C819B4D7AFD5F91900D3A059E06A467A75AC82F24C74',
+        cufd: 'BQUE+QytqQUDBKVUFOSVRPQkxVRFZNVFVJBMDAwMDAwM',
+        codigoSucursal: 0,
+        direccion: 'Calle Dr. Victor Pinto #123',
+        fechaEmision: '2023-01-21T09:01:24.178',
+        nombreRazonSocial: 'Juan Vargas',
+        codigoTipoDocumentoIdentidad: 1,
+        numeroDocumento: 1234567,
+        codigoCliente: 123456,
+        codigoMetodoPago: 1,
+        montoTotal: 100,
+        montoTotalSujetoIva: 100,
+        codigoMoneda: 1,
+        tipoCambio: 100,
+        montoTotalMoneda: 100,
+        leyenda: 'Ley N° 453: Tienes derecho a recibir información sobre las características y contenidos de los servicios que utilices.',
+        usuario: 'JORGEARTEAGA',
+      }
+    end
+
+    let(:detalles) do
+      [
+        {
+          actividadEconomica: 46788,
+          codigoProductoSin: 12345,
+          codigoProducto: 'BLA-23',
+          descripcion: 'Blusa Amarilla',
+          cantidad: 1,
+          unidadMedida: 1,
+          precioUnitario: 60,
+          montoDescuento: 0,
+          subTotal: 60,
+          numeroSerie: 124548,
+          numeroImei: 545454
+        },
+        {
+          actividadEconomica: 46789,
+          codigoProductoSin: 12346,
+          codigoProducto: 'BLR-24',
+          descripcion: 'Blusa Roja',
+          cantidad: 1,
+          unidadMedida: 1,
+          precioUnitario: 40,
+          montoDescuento: 0,
+          subTotal: 40,
+          numeroSerie: 124549,
+          numeroImei: 545455
+        }
+      ]
+    end
     let(:invoice_data) do
       {
-        cabecera: {
-          nitEmisor: 1905208,
-          razonSocialEmisor: 'Jorge Arteaga',
-          municipio: 'Santa Cruz',
-          telefono: 70055555,
-          numeroFactura:1234567,
-          cuf: '44AAEC00DBD34C819B4D7AFD5F91900D3A059E06A467A75AC82F24C74',
-          cufd: 'BQUE+QytqQUDBKVUFOSVRPQkxVRFZNVFVJBMDAwMDAwM',
-          codigoSucursal: 0,
-          direccion: 'Calle Dr. Victor Pinto #123',
-          fechaEmision: '2023-01-21T09:01:24.178',
-          nombreRazonSocial: 'Juan Vargas',
-          codigoTipoDocumentoIdentidad: 1,
-          numeroDocumento: 1234567,
-          codigoCliente: 123456,
-          codigoMetodoPago: 1,
-          montoTotal: 100,
-          montoTotalSujetoIva: 100,
-          codigoMoneda: 1,
-          tipoCambio: 100,
-          montoTotalMoneda: 100,
-          leyenda: 'Ley N° 453: Tienes derecho a recibir información sobre las características y contenidos de los servicios que utilices.',
-          usuario: 'JORGEARTEAGA',
-        },
-        detalles: [
-          {
-            actividadEconomica: 46788,
-            codigoProductoSin: 12345,
-            codigoProducto: 'BLA-23',
-            descripcion: 'Blusa Amarilla',
-            cantidad: 1,
-            unidadMedida: 1,
-            precioUnitario: 60,
-            montoDescuento: 0,
-            subTotal: 60,
-            numeroSerie: 124548,
-            numeroImei: 545454
-          },
-          {
-            actividadEconomica: 46789,
-            codigoProductoSin: 12346,
-            codigoProducto: 'BLR-24',
-            descripcion: 'Blusa Roja',
-            cantidad: 1,
-            unidadMedida: 1,
-            precioUnitario: 40,
-            montoDescuento: 0,
-            subTotal: 40,
-            numeroSerie: 124549,
-            numeroImei: 545455
-          }
-        ]
+        cabecera: cabecera,
+        detalles: detalles
       }
     end
 
@@ -122,6 +129,51 @@ describe FacturasXML do
       xsd = Nokogiri::XML::Schema(File.read(schema_path))
 
       expect(xsd.valid?(doc)).to eq true
+    end
+
+    describe 'when mandatory cabecera fields are not provided' do
+      let(:cabecera) do
+        {
+          telefono: 70055555,
+          numeroFactura:1234567,
+          cuf: '44AAEC00DBD34C819B4D7AFD5F91900D3A059E06A467A75AC82F24C74',
+          cufd: 'BQUE+QytqQUDBKVUFOSVRPQkxVRFZNVFVJBMDAwMDAwM',
+          codigoSucursal: 0,
+          direccion: 'Calle Dr. Victor Pinto #123',
+          fechaEmision: '2023-01-21T09:01:24.178',
+          codigoTipoDocumentoIdentidad: 1,
+          numeroDocumento: 1234567,
+          codigoCliente: 123456,
+          codigoMetodoPago: 1,
+          montoTotal: 100,
+          montoTotalSujetoIva: 100,
+          codigoMoneda: 1,
+          tipoCambio: 100,
+          montoTotalMoneda: 100,
+          leyenda: 'Ley N° 453: Tienes derecho a recibir información sobre las características y contenidos de los servicios que utilices.',
+          usuario: 'JORGEARTEAGA',
+        }
+      end
+
+      it 'raises the correct error' do
+        expect{ described_class.compra_venta(invoice_data, signature) }.to raise_error('La cabecera no tiene los campos: nitEmisor, razonSocialEmisor, municipio')
+      end
+    end
+
+    describe 'when invoice_data does not include a cabecera attribute' do
+      let(:cabecera) { nil }
+
+      it 'raises the correct error' do
+        expect{ described_class.compra_venta(invoice_data, signature) }.to raise_error('invoice_data debe conteter el attributo cabecera')
+      end
+    end
+
+    describe 'when invoice_data does not include a detalles attribute' do
+      let(:detalles) { nil }
+
+      it 'raises the correct error' do
+        expect{ described_class.compra_venta(invoice_data, signature) }.to raise_error('invoice_data debe conteter el attributo detalles')
+      end
     end
   end
 end
