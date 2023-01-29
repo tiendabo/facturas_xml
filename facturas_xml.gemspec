@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'facturas_xml'
-  spec.version = "0.0.1"
+  spec.version = "0.1.0"
   spec.summary = "Gem que produce facturas en formato XML"
   spec.description = "Gem que produce facturas en formato XML"
   spec.authors = ["Jorge Arteaga Carvalho"]
