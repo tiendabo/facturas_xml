@@ -1,5 +1,5 @@
 require 'nokogiri'
-require_relative 'invoice_data'
+require_relative 'facturas_xml/invoice_data'
 
 class FacturasXML
   attr_accessor :invoice_data, :signature

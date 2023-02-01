@@ -1,5 +1,5 @@
 require 'simplecov'
-require 'facturas_xml/facturas_xml'
+require 'facturas_xml'
 require 'dotenv/load'
 
 SimpleCov.start do

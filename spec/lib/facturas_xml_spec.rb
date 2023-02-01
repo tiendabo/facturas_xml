@@ -116,7 +116,7 @@ describe FacturasXML do
       xml = described_class.compra_venta(invoice_data, signature).to_xml
 
       expected_xml_file_path =
-        File.join(File.dirname(__FILE__), '../../support/compra_venta_invoice.xml')
+        File.join(File.dirname(__FILE__), '../support/compra_venta_invoice.xml')
       expected_xml = File.read(expected_xml_file_path)
 
       expect(xml).to eq(expected_xml)
@@ -125,7 +125,7 @@ describe FacturasXML do
     it 'passes validation against the XSD schema' do
       doc = Nokogiri::XML(described_class.compra_venta(invoice_data, signature).to_xml)
       schema_path =
-        File.join(File.dirname(__FILE__), '../../support/facturaElectronicaCompraVenta.xsd')
+        File.join(File.dirname(__FILE__), '../support/facturaElectronicaCompraVenta.xsd')
       xsd = Nokogiri::XML::Schema(File.read(schema_path))
 
       expect(xsd.valid?(doc)).to eq true
