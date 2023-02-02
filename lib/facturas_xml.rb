@@ -12,7 +12,7 @@ class FacturasXML
     Nokogiri::XML::Builder.with(template) do |xml|
       xml.facturaElectronicaCompraVenta('xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance", 'xsi:noNamespaceSchemaLocation': "facturaElectronicaCompraVenta.xsd") {
         self.cabecera(xml)
-        @invoice_data[:detalles].each do |data|
+        @invoice_data['detalles'].each do |data|
           self.detalle(xml, data)
         end
         self.signature(xml)
@@ -24,7 +24,7 @@ class FacturasXML
   def self.cabecera(xml)
     xml.cabecera {
       InvoiceData.allowed_cabecera_fields.each do |field_name|
-        self.invoice_field(xml, @invoice_data[:cabecera], field_name)
+        self.invoice_field(xml, @invoice_data['cabecera'], field_name)
       end
       xml.codigoDocumentoSector 1
     }
@@ -39,7 +39,7 @@ class FacturasXML
   end
 
   def self.invoice_field(xml, data, field_name)
-    value = data[field_name.to_sym]
+    value = data[field_name.to_s]
     attributes = value ? {} : {'xsi:nil': "true"}
     xml.send(field_name, value, attributes)
   end
@@ -55,13 +55,13 @@ class FacturasXML
             xml.Transform('Algorithm': "http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments")
           }
           xml.DigestMethod('Algorithm': "http://www.w3.org/2001/04/xmlenc#sha256")
-          xml.DigestValue(@signature[:DiggestValue])
+          xml.DigestValue(@signature['DiggestValue'])
         }
       }
-      xml.SignatureValue(@signature[:SignatureValue])
+      xml.SignatureValue(@signature['SignatureValue'])
       xml.KeyInfo {
         xml.X509Data {
-          xml.X509Certificate(@signature[:X509Certificate])
+          xml.X509Certificate(@signature['X509Certificate'])
         }
       }
     }
